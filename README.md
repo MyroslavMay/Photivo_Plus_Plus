@@ -10,7 +10,7 @@ photography.
 
 ## Build and Install
 
-For a detailed build guide see the [wiki](https://photivo.org/download).
+For a detailed build guide see the [wiki](https://web.archive.org/web/20241102114645/https://photivo.org/download).
 Pick the appropriate subpage for your operating system.
 
 Photivo uses CMake as its build systems. Build as usual:
