@@ -1,0 +1,30 @@
+set(manifest "@CMAKE_BINARY_DIR@/install_manifest.txt")
+
+if (NOT EXISTS "${manifest}")
+    message(FATAL_ERROR "Cannot find install manifest: ${manifest}")
+endif()
+
+file(READ "${manifest}" installed_files)
+string(REGEX REPLACE "\n" ";" installed_files "${installed_files}")
+
+foreach (file IN LISTS installed_files)
+    set(file "$ENV{DESTDIR}${file}")
+    message(STATUS "Uninstalling: ${file}")
+
+    # Explcitly checking for symlinks also catches broken symlinks, which don’t EXISTS.
+    if (EXISTS "${file}" OR IS_SYMLINK "${file}")
+        execute_process(
+            COMMAND
+                "@CMAKE_COMMAND@" -E remove "${file}"
+            OUTPUT_VARIABLE
+                output_dummy
+            RESULT_VARIABLE
+                exit_code
+        )
+        if (NOT "${exit_code}" EQUAL 0)
+            message(FATAL_ERROR "Uninstalling failed: ${file}")
+        endif()
+    else()
+        message(STATUS "Missing: ${file}")
+    endif()
+endforeach()
